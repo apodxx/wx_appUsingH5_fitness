@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="renderer" content="webkit" />
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0,uc-fitscreen=yes" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no" />
+	<title>miniMobile</title>
+	<meta name="keywords" content="miniMobile的demo" />
+	<meta name="description" content="miniMobile是一个简单易用的移动框架！" />
+
+	<link rel="stylesheet" type="text/css" href="css/miniMobile.css" />
+	<script type="text/javascript" src="js/zepto.min.js"></script>
+	<script type="text/javascript" src="js/miniMobile.js"></script>
+	<!-- fonticon -->
+	<link rel="stylesheet" type="text/css" href="plugins/fonticon/iconfont.css" />
+	<!-- animate.css -->
+	<link rel="stylesheet" type="text/css"
+		href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
+	<script type="text/javascript">
+		window.onload = function () {
+
+			var that = this;
+
+			function setCookie(name, value) {
+				var Days = 30;
+				var exp = new Date();
+				exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+				document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+			}
+
+			//读取cookies
+			function getCookie(name) {
+				var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+
+				if (arr = document.cookie.match(reg))
+
+					return unescape(arr[2]);
+				else
+					return null;
+			}
+			//求开始时间和结束时间时间间隔
+			function intervalTime(startTime, endTime) {
+				var date1 = new Date(startTime);  //开始时间
+				var date2 = new Date(endTime);    //结束时间
+				var date3 = date2.getTime() - date1.getTime();  //时间差的毫秒数
+				//计算出相差天数
+				var days = Math.floor(date3 / (24 * 3600 * 1000));
+				//计算出小时数
+
+				var leave1 = date3 % (24 * 3600 * 1000);    //计算天数后剩余的毫秒数
+				var hours = Math.floor(leave1 / (3600 * 1000)) + days * 24;
+				//计算相差分钟数
+				var leave2 = leave1 % (3600 * 1000);        //计算小时数后剩余的毫秒数
+				var minutes = Math.floor(leave2 / (60 * 1000));
+
+				//计算相差秒数
+
+				var leave3 = leave2 % (60 * 1000);      //计算分钟数后剩余的毫秒数
+				var seconds = Math.round(leave3 / 1000);
+				if (hours < 10) {
+					hours = '0' + hours;
+				}
+				if (minutes < 10) {
+					minutes = '0' + minutes;
+				}
+				if (seconds < 10) {
+					seconds = '0' + seconds;
+				}
+
+				return "时长：" + hours + ":" + minutes + ":" + seconds;
+			}
+			//删除cookies
+			function delCookie(name) {
+				var exp = new Date();
+				exp.setTime(exp.getTime() - 1);
+				var cval = getCookie(name);
+				if (cval != null)
+					document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
+			}
+			var userJsonStr = localStorage.getItem('user');
+			var userEntity = JSON.parse(userJsonStr);
+			var username = userEntity["name"];
+			$.ajax({
+				type: "post",
+				async: true,
+				url: "http://fitness.maigu.cc/lookup.php",
+				data: { startTime: "2020-04-19 00:00:01", FormerID: username },
+				dataType: "json",        //返回数据形式为json
+				success: function (data) {
+					console.log(data.length);
+					for (var i = 0; i <= data.length; i++) {
+						var type = data[i].type;
+						var time;
+						if (data[i].endTime == null) {
+							time = "正在锻炼";
+						} else {
+							time = intervalTime(data[i].startTime, data[i].endTime);
+						}
+
+						var date3 = new Date(data[i].endTime).getTime() - new Date(data[i].startTime).getTime();  //时间差的毫秒数
+						var t = data[i].startTime;
+						var date = t.toString().split(" ")[0].split["-"][1];
+					    $("#swiper").append('<li class="item h14">	<div class="w75 fl"><div class="fl w14 p2"><img src="img/user2.jpg" class="w10 radius-o" />	</div><div class="fl w61 t-l pt2 color4"><div class="f36 clearfix">	<p class="fr w9 f28 mr2 t-r">12:01</p><p class="fl w49 color3">'+type+'</p></div>	<p class="f28 nowrap">'+time+'</p></div></div><div class="btnbox fl"><div class="w15 bg-color-warning"><i class="icon iconfont icon-fanhuidingbu"></i></div><div class="w15 bg-color-danger">		<i class="icon iconfont icon-deletefill"></i>	</div></div></li>');
+					// $("#swiper").append('<li class="item h14">	<div class="w75 fl"><div class="fl w14 p2"><img src="img/user2.jpg" class="w10 radius-o" />	</div><div class="fl w61 t-l pt2 color4"><div class="f36 clearfix">	<p class="fr w9 f28 mr2 t-r">12:01</p><p class="fl w49 color3">小16654564</p></div>	<p class="f28 nowrap">你起床了吗？大懒虫！</p></div></div><div class="btnbox fl"><div class="w15 bg-color-warning"><i class="icon iconfont icon-fanhuidingbu"></i></div><div class="w15 bg-color-danger">		<i class="icon iconfont icon-deletefill"></i>	</div></div></li>');
+
+						//$("#swiper").append('<li class="item h14">	<div class="w75 fl"><div class="fl w14 p2"><img src="img/user2.jpg" class="w10 radius-o" />	</div><div class="fl w61 t-l pt2 color4"><div class="f36 clearfix">	<p class="fr w9 f28 mr2 t-r">'+date+'</p><p class="fl w49 color3">'+type+'</p></div>	<p class="f28 nowrap">'+time+'</p></div></div><div class="btnbox fl"><div class="w15 bg-color-warning"><i class="icon iconfont icon-fanhuidingbu"></i></div><div class="w15 bg-color-danger">		<i class="icon iconfont icon-deletefill"></i>	</div></div></li>');
+
+					}
+					// $("#swiper").append('<li class="item h14">	<div class="w75 fl"><div class="fl w14 p2"><img src="img/user2.jpg" class="w10 radius-o" />	</div><div class="fl w61 t-l pt2 color4"><div class="f36 clearfix">	<p class="fr w9 f28 mr2 t-r">12:01</p><p class="fl w49 color3">小16654564</p></div>	<p class="f28 nowrap">你起床了吗？大懒虫！</p></div></div><div class="btnbox fl"><div class="w15 bg-color-warning"><i class="icon iconfont icon-fanhuidingbu"></i></div><div class="w15 bg-color-danger">		<i class="icon iconfont icon-deletefill"></i>	</div></div></li>');
+
+				},
+				error: function (errorMsg) {
+
+					console.log(errorMsg);
+				}
+			});
+		}
+	</script>
+</head>
+
+<body class="fadeIn animated">
+
+
+	<div class="f36 color3 bg-color7 t-c">
+		<ul id="swiper" class="o-h clearfix">
+
+		</ul>
+	</div>
+	<div class="t-c f28 color5 m2">
+		没有更多内容
+	</div>
+	<style type="text/css">
+		.searchBox {
+			position: relative;
+		}
+
+		.searchBox i {
+			position: absolute;
+			right: 0;
+			line-height: 1.7em;
+			right: 0.2rem;
+		}
+
+		.searchBox input {
+			font-size: 0.34rem;
+		}
+
+		ul {
+			border-top: 1px solid #F1F1F1;
+			line-height: 1.4em;
+		}
+
+		.item {
+			width: 10.5rem;
+			border-bottom: 1px solid #F1F1F1;
+		}
+
+		.btnbox {
+			height: 100%;
+			line-height: 1.4rem;
+			color: #fff;
+		}
+
+		.btnbox div {
+			cursor: pointer;
+			float: left;
+		}
+
+		.demo-bottomNav {
+			line-height: 1.8em;
+			border-top: 1px solid #F1F1F1;
+		}
+
+		.demo-bottomNav a {
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+
+
+
+</body>
+
+</html>

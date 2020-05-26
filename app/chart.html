@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="renderer" content="webkit" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0,uc-fitscreen=yes" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<meta name="format-detection" content="telephone=no" />
+		<title>miniMobile</title>
+		<meta name="keywords" content="miniMobile的demo" />
+		<meta name="description" content="miniMobile是一个简单易用的移动框架！" />
+        <!-- miniMObile.css、js -->
+
+		<link rel="stylesheet" type="text/css" href="css/miniMobile.css"/>
+		<script type="text/javascript" src="js/zepto.min.js"></script>
+        <script type="text/javascript" src="js/miniMobile.js"></script>
+        <script type="text/javascript" src="js/echarts.js"></script>
+		<!-- fonticon -->
+		<link rel="stylesheet" type="text/css" href="plugins/fonticon/iconfont.css" />
+		<!-- animate.css -->
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
+        
+        <script src="js/laydate/laydate.js"></script>
+        <style type="text/css">
+            body{
+				background-color: rgb(253, 214, 135);	
+			}
+        </style>
+        <script type="text/javascript">
+
+            function dateFormat(fmt, date) {
+				let ret;
+				const opt = {
+					"Y+": date.getFullYear().toString(),        // 年
+					"m+": (date.getMonth() + 1).toString(),     // 月
+					"d+": date.getDate().toString(),            // 日
+					"H+": date.getHours().toString(),           // 时
+					"M+": date.getMinutes().toString(),         // 分
+					"S+": date.getSeconds().toString()          // 秒
+					// 有其他格式化字符需求可以继续添加，必须转化成字符串
+				};
+				for (let k in opt) {
+					ret = new RegExp("(" + k + ")").exec(fmt);
+					if (ret) {
+						fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
+					};
+				};
+				return fmt;
+			}
+            let  name ;
+            function getConnectionDB(name, date){
+                var myChart = echarts.init(document.getElementById('pie_echarts'));
+                $.ajax({
+                        type : "post",
+                        async : true,
+                        url : "http://127.0.0.1/chart.php",
+                        data :{FormerID:"12345apodx",startTime:date},
+                        dataType : "json",        //返回数据形式为json
+                        success : function(data) {
+                            console.log(data);
+                            var calorie = 0;
+                            for(var i =0 ;i <data.length;i++){
+                                calorie += parseInt(data[i].value)
+                            };
+                            document.getElementById("chart_label").innerText="你一共消耗了"+calorie+"卡的能量，再接再厉！";
+                            var option ={
+                                
+                                backgroundColor: "#fff",
+                                grid: {
+                                    left: '5%',
+                                    right: '5%',
+                                    top: '5%',
+                                    bottom: '5%'
+                                },
+                                tooltip : {
+                                    trigger: 'item',
+                                    formatter: "{b}:{d}%"
+                                },
+                                title: {
+                                    text:'各器材能量消耗',
+                                    left:'center',
+                                    top:'45%',
+                                    padding:[24,0],
+                                    textStyle:{
+                                    color:'#031f2d',
+                                    fontSize:20,
+                                    align:'center'
+                                    }
+                                },
+                                color: ["#37A2DA", "#32C5E9", "#67E0E3", "#91F2DE", "#FFDB5C", "#FF9F7F"],
+                                series: [{
+                                    label: {
+                                    normal: {
+                                        fontSize: 14
+                                    }
+                                    },
+                                    type: 'pie',
+                                    data: data
+                                }]
+                                }
+                            myChart.setOption(option);
+                        },
+                        error : function(errorMsg) {
+
+                            console.log(errorMsg);
+                        }
+                    });
+
+            }
+            window.onload = function () {
+                var date = dateFormat("YYYY-mm-dd",new Date());
+                document.getElementById("test1").innerText=date;
+                var userJsonStr = localStorage.getItem('user');
+                var userEntity = JSON.parse(userJsonStr);
+                // console.log(userEntity["name"]);
+                // console.log(decodeURI(window.location.href));
+                var index = decodeURI(window.location.href).indexOf('?');
+                if(index!=-1){
+                    document.getElementById("timer").style.display = "none";
+                    document.getElementById("chart_label").style.display="none";
+                    params =  decodeURI(window.location.href).toString().split("?")[1];
+                    console.log(params);
+                    var name = params.split("&")[0].split("=")[1];
+                    date = params.split("&")[1].split("=")[1];
+                    getConnectionDB(name,date);
+                }else{
+                    //need to modify
+                    var userJsonStr = localStorage.getItem('user');
+                    var userEntity = JSON.parse(userJsonStr);
+                    var username = userEntity["name"];
+                    var date = dateFormat("YYYY-mm-dd",new Date());
+                    document.getElementById("test1").innerText=date;
+                    getConnectionDB(username,date);
+                }
+
+
+            };
+          
+        </script>
+	</head>
+
+	<body style="background-color: #c7e2cf;">
+
+        <div style="margin-top: 10px;text-align: center;" id="timer">
+            请选择日期：
+            <label  class="w59  form-control" id="test1" >时间选择</label>
+        </div>
+        <div style="margin-top: 10px;text-align: center;font-family: 'Arial','Microsoft YaHei','黑体','宋体',sans-serif;">
+           
+            <label  id="chart_label" ></label>
+        </div>
+        <div class="layui-card">
+            <div id="pie_echarts" class="layui-card-body" style="width: 100%;height:100%;">
+            </div>
+        </div>
+
+        <style type="text/css">
+            body{
+                background-color: #c7e2cf;	
+
+            }
+            .layui-card{
+                margin:0 auto;
+                padding: 10px;
+                height: calc(70vh);
+                width: 100%;
+            }
+        </style>
+        <script type="text/javascript">
+            laydate.render({
+                elem: '#test1' //指定元素
+                ,done:function(value,date){
+                    console.log(value);
+                    getConnectionDB(name,value);
+                }
+            });
+        
+        </script>
+    </body>
+   
+
+</html>

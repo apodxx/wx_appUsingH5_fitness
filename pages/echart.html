@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>第一个 ECharts 实例</title>
+    <script src="../dist/jquery-2.0.3.min.js"></script>
+    <!-- 引入 echarts.js -->
+    
+    <script src="../dist/laydate/laydate.js"></script>
+    <link rel="stylesheet" href="../dist/laydate/theme/default/laydate.css" media="all">
+    <script src="../dist/layui/layui.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../dist/layui/css/layui.css"/>
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+</head>
+<body>
+    
+    <div class="layui-inline">
+        <label class="layui-form-label">月份选择</label>
+        <div class="layui-input-inline" style="width: 100px;">
+        <input type="text" name="price_min" placeholder="-" autocomplete="off" class="layui-input" id="test1">
+        </div>
+    </div>
+
+
+ 
+
+
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="bar_chart" style="width: 600px;height:400px;"></div>
+    <div id="line_chart" style="width: 600px;height:400px;"></div>
+
+    <script type="text/javascript">
+       
+        var bar_chart = echarts.init(document.getElementById('bar_chart'));
+        var line_chart = echarts.init(document.getElementById('line_chart'));
+        bar_chart.setOption({
+                title: {
+                    text: '用户健身项目展示'
+                },
+                tooltip: {},
+                legend: {
+                    data:['用户使用的数量']
+                },
+                xAxis: {
+                    data: [ "跑步", "引体向上", "瑜伽","健身","游泳","健身房", "单车"]
+                },
+                yAxis : [ { 
+                    type : 'value',
+                    scale : true,
+                    min : 0,
+                    // splitNumber : 2,
+                    minInterval: 1,
+                    boundaryGap : [ 0.2, 0.2 ]
+            } ],
+
+                series: [{
+                    name: '人数',
+                    type: 'bar',
+                    data: [10,20,30,40,50,6,15]
+                }]
+            });
+        var chart =function (data) {
+            line_chart.setOption({
+                title: {
+                text: '折线图堆叠'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: ['1', '2', '3', '4', '5', '6', '7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31']
+            },
+            yAxis: {
+                type: 'value'
+            },
+
+            series: [
+                {
+                    name: '月活数',
+                    type: 'line',
+                    stack: '总量',
+                    data: [120, 132, 101, 134, 90, 230, 210]
+                },
+
+            ]
+            });
+            bar_chart.setOption({
+                title: {
+                    text: '用户健身项目展示'
+                },
+                tooltip: {},
+                legend: {
+                    data:['用户使用的数量']
+                },
+                xAxis: {
+                    data: data.type
+                },
+                yAxis : [ { 
+                    type : 'value',
+                    scale : true,
+                    min : 0,
+                    // splitNumber : 2,
+                    minInterval: 1,
+                    boundaryGap : [ 0.2, 0.2 ]
+            } ],
+
+                series: [{
+                    name: '人数',
+                    type: 'bar',
+                    data: data.count
+                }]
+            });
+        };
+        //请求参数
+        var list = {};
+        $.ajax({
+            //请求方式
+            type : "GET",
+            //请求的媒体类型
+            contentType: "application/json;charset=UTF-8",
+            //请求地址
+            url : "http://fitness.maigu.cc/charForPC.php",
+
+            //请求成功
+            success : function(result) {
+                chart(result);
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                console.log(e.status);
+                console.log(e.responseText);
+            }
+        });
+      
+
+        //http://fitness.maigu.cc/analysis.php?startTime=2020-4-30 16:40:00&&endTime=2020-4-30 16:53:00
+
+        //执行一个laydate实例
+        laydate.render({
+        elem: '#test1' //指定元素,
+        ,theme: '#393D49'
+        ,type: 'month'
+        ,done: function(value, date, endDate){
+
+            var startTime = value+"-01 00:00:00";
+            var endTime = value+"-31 23:59:59";
+            console.log(startTime);
+            console.log(endTime);
+            $.ajax({
+                type : "get",
+                async : true,
+                url : "http://fitness.maigu.cc/analysis.php",
+                data :{startTime:startTime,endTime:endTime},
+                dataType : "json",        //返回数据形式为json
+                success : function(data) {
+                    chart(data);
+                },
+                error : function(errorMsg) {
+                    console.log("我报错了");
+                    console.log(errorMsg);
+                }
+            });
+
+
+
+        }
+    });
+    </script>
+</body>

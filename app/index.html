@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>全民健身</title>
+	<meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport" />
+	<meta content="yes" name="apple-mobile-web-app-capable" />
+	<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+	<meta content="telephone=no" name="format-detection" />
+	<link href="css/style.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript">
+
+		window.onload = function () {
+
+			var userJsonStr = localStorage.getItem('user');
+            var userEntity = JSON.parse(userJsonStr);
+
+            if(userEntity  == ""||userEntity==null){
+                window.location.href="login/index.html"
+            }else{
+                	
+				$("#index").click(function(){
+					document.getElementById("title").innerText="打  卡";
+					document.getElementById("external-frame").src="index1.html";　　
+				});
+				$("#record").click(function(){
+					document.getElementById("title").innerText="健 身 记 录";
+					document.getElementById("external-frame").src="record.html";　　
+				});
+				$("#chart").click(function(){
+					document.getElementById("title").innerText="能 量 消 耗";
+					document.getElementById("external-frame").src="chart.html";　　
+				});
+				$("#rank").click(function(){
+					document.getElementById("title").innerText="龙 虎 榜";
+					document.getElementById("external-frame").src="rank.html";　　
+				});
+             }				
+
+		};
+	</script>
+</head>
+<body>
+<section class="jq22-flexView">
+	<header class="header" style="text-align: center; line-height: 40px;height: 40px;background-color: #039443;">
+
+		<div id="title" style="color: white;font-weight: bold;font-family: '微软雅黑,宋体,Arial,Helvetica,Verdana,sans-serif;'">
+			首 页
+		</div>
+
+
+	</header>
+	<iframe src="index1.html" id="external-frame"  scrolling="yes" width="100%" height="100%" frameborder="0"></iframe>
+
+	<footer class="jq22-footer jq22-footer-fixed">
+		<a href="javascript:;" class="jq22-tabBar-item jq22-tabBar-item-active" id="index">
+                <span class="jq22-tabBar-item-icon">
+                    <i class="icon icon-loan"></i>
+                </span>
+			<span class="jq22-tabBar-item-text">打 卡</span>
+		</a>
+		<a href="javascript:;" class="jq22-tabBar-item " id="record">
+                <span class="jq22-tabBar-item-icon">
+                    <i class="icon icon-credit"></i>
+                </span>
+			<span class="jq22-tabBar-item-text">健身记录</span>
+		</a>
+		<a href="javascript:;" class="jq22-tabBar-item " id='chart'>
+                <span class="jq22-tabBar-item-icon">
+                    <i class="icon icon-ions"></i>
+                </span>
+			<span class="jq22-tabBar-item-text">能量消耗</span>
+		</a>
+		<a href="javascript:;" class="jq22-tabBar-item " id="rank">
+                <span class="jq22-tabBar-item-icon">
+                    <i class="icon icon-car"></i>
+                </span>
+			<span class="jq22-tabBar-item-text">龙虎榜</span>
+		</a>
+
+	</footer>
+</section>
+</body>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/slider.js"></script>
+</html>

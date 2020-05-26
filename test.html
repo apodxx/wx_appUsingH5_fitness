@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+        <title></title>
+        <script src="../dist/jquery-2.0.3.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="../dist/layui/css/layui.css"/>
+	</head>
+	<body style="padding: 15px;box-sizing: border-box;">
+
+    </body>
+    <script>
+
+$(document).ready(function(){
+    var array =  new Array({"1":1},{"2":2});
+    var a = {"hah":4};
+    array.push(a);
+
+    console.log(array);
+    
+    function intervalMinutes(startTime,endTime){
+         var date1 = new Date(startTime);  //开始时间
+        var date2 = new Date(endTime);    //结束时间
+        var date3 = date2.getTime() - date1.getTime();  //时间差的毫秒数
+        //计算出相差天数
+        var days = Math.floor(date3 / (24 * 3600 * 1000));
+        //计算出小时数
+
+        var leave1 = date3 % (24 * 3600 * 1000);    //计算天数后剩余的毫秒数
+        var hours = Math.floor(leave1 / (3600 * 1000))+days*24;
+        //计算相差分钟数
+        var leave2 = leave1 % (3600 * 1000);        //计算小时数后剩余的毫秒数
+        var minutes = Math.floor(leave2 / (60 * 1000))+hours*60;
+
+        //计算相差秒数
+
+        var leave3 = leave2 % (60 * 1000);      //计算分钟数后剩余的毫秒数
+        var seconds = Math.round(leave3 / 1000);
+        return minutes ;
+
+    }
+    function intervalTime(startTime,endTime){
+        var date1 = new Date(startTime);  //开始时间
+        var date2 = new Date(endTime);    //结束时间
+        var date3 = date2.getTime() - date1.getTime();  //时间差的毫秒数
+        //计算出相差天数
+        var days = Math.floor(date3 / (24 * 3600 * 1000));
+        //计算出小时数
+
+        var leave1 = date3 % (24 * 3600 * 1000);    //计算天数后剩余的毫秒数
+        var hours = Math.floor(leave1 / (3600 * 1000))+days*24;
+        //计算相差分钟数
+        var leave2 = leave1 % (3600 * 1000);        //计算小时数后剩余的毫秒数
+        var minutes = Math.floor(leave2 / (60 * 1000));
+
+        //计算相差秒数
+
+        var leave3 = leave2 % (60 * 1000);      //计算分钟数后剩余的毫秒数
+        var seconds = Math.round(leave3 / 1000);
+        return " 用时：  "+ hours + "小时 " + minutes + " 分钟" + seconds + " 秒";
+      }
+        var a = intervalMinutes("2020-04-02 00:59:59","2020-04-02 01:00:00");
+
+        console.log();
+
+
+});
+
+
+
+    </script>
+</html>
+

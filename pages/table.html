@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../dist/layui/css/layui.css"/>
+	</head>
+	<body>
+		<div id="test">
+			
+		</div>
+	</body>
+</html>
+<script src="../dist/layui/layui.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+	layui.use('table', function(){
+        var table = layui.table;
+
+        table.render({
+            elem: '#test'
+            ,url:'http://fitness.maigu.cc/recordAllUserForPC.php'
+            ,page:true
+            ,width:'100%'
+            ,height:'full-0'
+            ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            ,cols: [[
+                {field:'Id', width:150, title: 'id', sort: true}
+                ,{field:'former', width:300, title: '用户名'}
+                ,{field:'type', width:300, title: '健身类型', sort: true}
+                ,{field:'startTime', width:300, title: '结束时间', sort: true}
+                ,{field:'endTime', width:300, title: '开始时间', sort: true}
+                ,{field:'remark', width:350, title: '备注'}
+            ]]
+            ,request:{
+                pageName: 'curr' //页码的参数名称，默认：page
+                ,limitName: 'nums' //每页数据量的参数名，默认：limit
+            }
+            //用于对返回的数据格式的自定义，如：
+
+        });
+   });
+</script>
